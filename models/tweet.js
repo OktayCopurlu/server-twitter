@@ -11,7 +11,7 @@ const TweetSchema = new mongoose.Schema(
       required: true,
       ref: "User",
     },
-
+    username: { type: String, required: true },
     likes: {
       type: Number,
       default: 0,

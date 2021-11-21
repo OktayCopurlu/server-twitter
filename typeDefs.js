@@ -12,6 +12,7 @@ export const typeDefs = gql`
   type Tweet {
     _id: ID
     user: User!
+    username: String!
     text: String!
     title: String!
     images: [String]
@@ -36,6 +37,7 @@ export const typeDefs = gql`
   type Mutation {
     createTweet(
       user: ID!
+      username: String!
       text: String!
       title: String!
       images: [String]
