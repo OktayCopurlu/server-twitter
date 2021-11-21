@@ -16,11 +16,17 @@ const UserSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    avatar: { type: String },
-    
+    image: { type: String },
+
     tweets: [
       {
-        type: [mongoose.Schema.Types.ObjectId],
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Tweet",
+      },
+    ],
+    likesTweet: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Tweet",
       },
     ],

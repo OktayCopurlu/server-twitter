@@ -7,21 +7,23 @@ export const typeDefs = gql`
     email: String!
     password: String!
     tweets: [Tweet]
-    avatar: String
+    image: String
+    likesTweet: [Tweet]
   }
   type Tweet {
     _id: ID
-    parentTweet: Tweet
     user: User!
     text: String!
     title: String!
-    tweets: [Tweet]
-    # likes: Number
+    images: [String]
+    likes: Int
+    likedUser: [User]
   }
   type Query {
     getUsers: [User]!
     getTweets: [Tweet]
     getUserTweets(user: ID!): [Tweet]
+    deleteTweet(_id: ID): [Tweet]
   }
 
   type Mutation {
@@ -29,8 +31,14 @@ export const typeDefs = gql`
       user: ID!
       text: String!
       title: String!
-      parentTweet: ID
+      images: [String]
     ): Tweet!
-    createUser(username: String!, email: String!, password: String!): User!
+    createUser(
+      username: String!
+      email: String!
+      password: String!
+      image: String
+    ): User!
+    addLike(_id: ID!, likes: Int, likedUser: ID): Tweet!
   }
 `;

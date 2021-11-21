@@ -1,31 +1,28 @@
 import mongoose from "mongoose";
 const TweetSchema = new mongoose.Schema(
   {
+    title: {
+      type: String,
+      required: true,
+    },
+    text: { type: String, required: true },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "User",
-    },
-    parentTweet: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Tweet",
-    },
-    text: { type: String, required: true },
-    title: {
-      type: String,
-      required: true,
     },
 
     likes: {
       type: Number,
       default: 0,
     },
-    tweets: [
+    likedUser: [
       {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: "Tweet",
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
       },
     ],
+    images: [{ type: String }],
   },
   {
     timestamps: true,
