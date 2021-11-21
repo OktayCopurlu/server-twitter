@@ -29,7 +29,6 @@ export const resolvers = {
   },
   Mutation: {
     createTweet: async (_, { title, user,username, text, images }, { Tweet }) => {
-      
       const newTweet = await new Tweet({
         title,
         user,

@@ -18,6 +18,7 @@ export const typeDefs = gql`
     images: [String]
     likes: Int
     likedUser: [User]
+    createdAt: String
   }
   type Query {
     getUsers: [User]!
