@@ -1,5 +1,4 @@
 import { gql } from "graphql-tag";
-
 export const typeDefs = gql`
   type User {
     _id: ID
@@ -25,7 +24,15 @@ export const typeDefs = gql`
     getUserTweets(user: ID!): [Tweet]
     deleteTweet(_id: ID): [Tweet]
   }
-
+  type Likes {
+    likes: Int
+    likesTweet: [Tweet]
+  }
+  type Token {
+    token: String!
+    username: String!
+    _id: ID!
+  }
   type Mutation {
     createTweet(
       user: ID!
@@ -33,12 +40,9 @@ export const typeDefs = gql`
       title: String!
       images: [String]
     ): Tweet!
-    createUser(
-      username: String!
-      email: String!
-      password: String!
-      image: String
-    ): User!
-    addLike(_id: ID!, likes: Int, likedUser: ID): Tweet!
+    createUser(username: String!, email: String!, password: String!): Token
+    login(username: String!, email: String!, password: String!): Token
+    addLike(_id: ID!, username: String!): Likes!
+    unLike(_id: ID!, username: String!): Likes!
   }
 `;
