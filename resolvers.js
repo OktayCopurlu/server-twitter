@@ -20,12 +20,13 @@ export const resolvers = {
         path: "user",
         model: "Tweet",
       });
-
       return tweets;
     },
     getUserLikedTweets: async (_, { _id }, { User }) => {
-      const tweets = await User.findById({ _id }).populate("likesTweet");
-      return tweets;
+      const tweets = await User.findById({ _id })
+     .populate("likesTweet")
+     return tweets.likesTweet
+      
     },
     deleteTweet: async (_, { _id }, { Tweet }) => {
       await Tweet.findOneAndRemove({ _id });
@@ -36,7 +37,7 @@ export const resolvers = {
     createTweet: async (
       _,
       { title, user, username, text, images },
-      { Tweet }
+      { Tweet, User }
     ) => {
       const newTweet = await new Tweet({
         title,
@@ -45,6 +46,12 @@ export const resolvers = {
         text,
         images,
       }).save();
+
+      await User.findOneAndUpdate(
+        { user },
+        { $addToSet: { tweets: newTweet._id } },
+        { new: true }
+      ).populate({ path: "tweets", model: "Tweet" });
       return newTweet;
     },
     login: async (_, { username, email, password }, { User }) => {
@@ -71,6 +78,7 @@ export const resolvers = {
         email,
         password,
       }).save();
+
       return {
         token: createToken(newUser, "thisismyuniqesecretkey", "1hr"),
         username,
@@ -88,6 +96,14 @@ export const resolvers = {
         { $addToSet: { likesTweet: tweet } },
         { new: true }
       ).populate({ path: "likesTweet", model: "Tweet" });
+      await tweet
+        .updateOne(
+          {
+            $addToSet: { likedUser: user },
+          },
+          { new: true }
+        )
+        .populate({ path: "likedUser", model: "Tweet" });
       return { likes: tweet.likes, likesTweet: user.likesTweet };
     },
     unLike: async (_, { _id, username }, { Tweet, User }) => {
@@ -98,9 +114,17 @@ export const resolvers = {
       );
       const user = await User.findOneAndUpdate(
         { username },
-        { $pull: { likesTweet: tweet } },
+        { $pull: { likesTweet: tweet._id } },
         { new: true }
-      ).populate({ path: "likesTweet", model: "Tweet" });
+      ).populate({ path: "likesTweet", model: "User" });
+      await tweet
+        .updateOne(
+          {
+            $pull: { likedUser: user._id },
+          },
+          { new: true }
+        )
+        .populate({ path: "likedUser", model: "Tweet" });
       return { likes: tweet.likes, likesTweet: user.likesTweet };
     },
   },

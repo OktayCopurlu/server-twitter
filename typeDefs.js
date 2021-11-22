@@ -17,7 +17,7 @@ export const typeDefs = gql`
     title: String!
     images: [String]
     likes: Int
-    likedUser: [User]
+    likedUser: [ID]
     createdAt: String
   }
   type Query {
@@ -25,7 +25,7 @@ export const typeDefs = gql`
     getTweets: [Tweet]
     getUserTweets(user: ID!): [Tweet]
     deleteTweet(_id: ID): [Tweet]
-    getUserLikedTweets(_id: ID): [Tweet]!
+    getUserLikedTweets(_id: ID): [Tweet]
   }
   type Likes {
     likes: Int
