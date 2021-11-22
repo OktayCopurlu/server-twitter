@@ -20,9 +20,13 @@ export const resolvers = {
         path: "user",
         model: "Tweet",
       });
+
       return tweets;
     },
-
+    getUserLikedTweets: async (_, { _id }, { User }) => {
+      const tweets = await User.findById({ _id }).populate("likesTweet");
+      return tweets;
+    },
     deleteTweet: async (_, { _id }, { Tweet }) => {
       await Tweet.findOneAndRemove({ _id });
       return console.log("tweet was deleted...");

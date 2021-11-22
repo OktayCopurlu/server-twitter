@@ -25,6 +25,7 @@ export const typeDefs = gql`
     getTweets: [Tweet]
     getUserTweets(user: ID!): [Tweet]
     deleteTweet(_id: ID): [Tweet]
+    getUserLikedTweets(_id: ID): [Tweet]!
   }
   type Likes {
     likes: Int
@@ -34,7 +35,6 @@ export const typeDefs = gql`
     token: String!
     username: String!
     _id: ID!
-    likesTweet: [Tweet]!
   }
   type Mutation {
     createTweet(
