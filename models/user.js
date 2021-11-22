@@ -26,7 +26,7 @@ const UserSchema = new mongoose.Schema(
     ],
     likesTweet: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Object,
         ref: "Tweet",
       },
     ],

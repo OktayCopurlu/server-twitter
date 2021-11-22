@@ -4,7 +4,7 @@ const createToken = (user, secret, expiresIn) => {
   const { username, email } = user;
   return jwt.sign({ username, email }, secret, { expiresIn });
 };
- 
+
 export const resolvers = {
   Query: {
     getUsers: async (_, args, { User }) => {
@@ -22,13 +22,18 @@ export const resolvers = {
       });
       return tweets;
     },
+
     deleteTweet: async (_, { _id }, { Tweet }) => {
       await Tweet.findOneAndRemove({ _id });
       return console.log("tweet was deleted...");
     },
   },
   Mutation: {
-    createTweet: async (_, { title, user,username, text, images }, { Tweet }) => {
+    createTweet: async (
+      _,
+      { title, user, username, text, images },
+      { Tweet }
+    ) => {
       const newTweet = await new Tweet({
         title,
         user,
@@ -45,11 +50,11 @@ export const resolvers = {
       } else if (password !== user.password) {
         throw new Error("Invalid Password");
       }
-
       return {
         token: createToken(user, "thisismyuniqesecretkey", "4hr"),
         username: user.username,
         _id: user._id,
+        likesTweet: user.likesTweet,
       };
     },
     createUser: async (_, { username, email, password }, { User }) => {
@@ -76,7 +81,7 @@ export const resolvers = {
       );
       const user = await User.findOneAndUpdate(
         { username },
-        { $addToSet: { likesTweet: _id } },
+        { $addToSet: { likesTweet: tweet } },
         { new: true }
       ).populate({ path: "likesTweet", model: "Tweet" });
       return { likes: tweet.likes, likesTweet: user.likesTweet };
@@ -89,7 +94,7 @@ export const resolvers = {
       );
       const user = await User.findOneAndUpdate(
         { username },
-        { $pull: { likesTweet: _id } },
+        { $pull: { likesTweet: tweet } },
         { new: true }
       ).populate({ path: "likesTweet", model: "Tweet" });
       return { likes: tweet.likes, likesTweet: user.likesTweet };

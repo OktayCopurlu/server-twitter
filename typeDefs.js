@@ -34,6 +34,7 @@ export const typeDefs = gql`
     token: String!
     username: String!
     _id: ID!
+    likesTweet: [Tweet]!
   }
   type Mutation {
     createTweet(
