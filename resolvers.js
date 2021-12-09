@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
 
 const createToken = (user, secret, expiresIn) => {
-  const { username, email } = user;
-  return jwt.sign({ username, email }, secret, { expiresIn });
+  const { username, email, _id } = user;
+  return jwt.sign({ username, email, _id }, secret, { expiresIn });
 };
 
 export const resolvers = {
@@ -23,10 +23,8 @@ export const resolvers = {
       return tweets;
     },
     getUserLikedTweets: async (_, { _id }, { User }) => {
-      const tweets = await User.findById({ _id })
-     .populate("likesTweet")
-     return tweets.likesTweet
-      
+      const tweets = await User.findById({ _id }).populate("likesTweet");
+      return tweets.likesTweet;
     },
     deleteTweet: async (_, { _id }, { Tweet }) => {
       await Tweet.findOneAndRemove({ _id });
